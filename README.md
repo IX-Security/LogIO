@@ -49,6 +49,18 @@ Log Levels help to define a standard for displaying outputs ~ using LogLevel you
 
 ---
 
+> getLogger
+
+```lua
+  local LogClass = LogIO.getLogger("InitiatedSystem")
+  
+  LogClass:setLogLevel(5)
+```
+
+Get Logger will return the initiated log object
+
+---
+
 > debug, log, warn, error, critical
 
 ```lua

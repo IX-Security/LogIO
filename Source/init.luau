@@ -33,6 +33,8 @@ type logSettings = {
 }
 
 local LogIO = { }
+
+local loggersLookup = { }
 local tableLookup = { }
 
 LogIO.defaultPattern = "[%s][%s]%s: %s"
@@ -211,12 +213,17 @@ function LogIO:setProperty(name, value)
 	self.properties[name] = value
 end
 
+function LogIO.getLogger(logName)
+	return loggersLookup[logName] :: logObject
+end
+
 function LogIO.new(logName: string, logSettings: logSettings)
 	local self = setmetatable({ }, { __index = LogIO })
 
 	self.logName = logName
 
 	assert(self.logName ~= nil, "Expected LogName: string")
+	assert(loggersLookup[logName] == nil, "Logging Object already exists")
 
 	self.properties = (logSettings and logSettings.properties) or self.defaultProperties
 	self.errorFormat = (logSettings and logSettings.errorFormat) or self.defaultErrorPattern
@@ -228,6 +235,8 @@ function LogIO.new(logName: string, logSettings: logSettings)
 	for prototypeName, prototypeData in self.deafaultPrototypes do
 		self:_loadPrototype(prototypeName, prototypeData)
 	end
+
+	loggersLookup[logName] = self
 
 	return self :: logObject
 end
